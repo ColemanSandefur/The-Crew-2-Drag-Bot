@@ -1,0 +1,6 @@
+.settings
+bin
+.classpath
+.project
+images/*
+location_data/*

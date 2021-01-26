@@ -10,8 +10,10 @@ import javax.imageio.ImageIO;
 import setting_editor.settings.Setting;
 import utils.Pixel;
 
+@SuppressWarnings("rawtypes")
 public class SelectionPoint {
-	int x = 0, y = 0, width = 3;
+	int width = 3;
+	Point point, oldPoint;
 	Pixel color;
 	Flashing flashing;
 	ImageCanvas canvas;
@@ -19,27 +21,21 @@ public class SelectionPoint {
 	public Flashing createFlashing() {
 		
 		return new Flashing() {
-			int _x, _y, _width;
+			Point _point;
 			
 			@Override
 			public void onFlash(boolean flashing) {
-				_x = x;
-				_y = y;
-				_width = width;
+				_point = point;
+				
 				if (canvas != null) {
-					repaint(canvas);
+					repaint(canvas, _point);
 				}
 			}
 
 			@Override
 			public void onStop() {
 				// TODO Auto-generated method stub
-				_repaint(canvas);
-			}
-			
-			public void _repaint(ImageCanvas c) {
-				int offset = 1;
-				c.repaint(_x - _width/2, _y - _width/2, _width + offset, _width + offset);
+				repaint(canvas, _point);
 			}
 		};
 	}
@@ -48,39 +44,52 @@ public class SelectionPoint {
 	
 	public void moveCursor(int x, int y, ImageCanvas c) {
 		canvas = c;
-		if (this.x != x || this.y != y) {
-//			repaint(c);
+		if (point == null || point.x != x || point.y != y) {
+			
 			if (flashing != null)
 				flashing.stopRunning();
 			
+			oldPoint = point;
+			
 			flashing = createFlashing();
-			this.x = x;
-			this.y = y;
+			point = new Point(x, y);
 			flashing.start();
 		}
 	}
 	
 	public void drawCursor(Graphics g) {
-		if (color == null || (flashing != null && flashing.flashing == false)) {
+		if (color == null || (flashing != null && flashing.flashing == false) || point == null) {
 			return;
 		}
 		
 		int z = canvas.zoom;
 		g.setColor(color.toColor());
-		g.fillRect(x * z - width * z /2, y * z - width * z /2, width * z, width * z);
+		g.fillRect(point.x * z - width * z /2, point.y * z - width * z /2, width * z, width * z);
 		g.setColor(color.invert().toColor());
-		g.drawRect(x * z - width * z /2, y * z - width * z /2, width * z, width * z);
+		g.drawRect(point.x * z - width * z /2, point.y * z - width * z /2, width * z, width * z);
+	}
+	
+	public void repaint(ImageCanvas c, Point p) {
+		if (p == null || c == null) {
+			return;
+		}
+		
+		int offset = 1;
+		int z = canvas.zoom;
+		c.repaint(p.x * z - width * z /2, p.y * z - width * z /2, width * z + offset, width * z + offset);
 	}
 	
 	public void repaint(ImageCanvas c) {
-		int offset = 1;
-		int z = canvas.zoom;
-		c.repaint(x * z - width * z /2, y * z - width * z /2, width * z + offset, width * z + offset);
+		repaint(c, point);
 	}
 	
 	public void stop() {
-		flashing.stopRunning();
+		if (flashing != null)
+			flashing.stopRunning();
+		
 		repaint(canvas);
+		
+		point = null;
 	}
 	
 	private void saveLocation(Setting setting) {
@@ -89,8 +98,8 @@ public class SelectionPoint {
 		try {
 			FileWriter stream = new FileWriter(location);
 			
-			stream.write(x + " ");
-			stream.write(y + " ");
+			stream.write(point.x + " ");
+			stream.write(point.y + " ");
 			stream.write(1 + " ");
 			stream.write(1 + " ");
 			
@@ -105,7 +114,7 @@ public class SelectionPoint {
 		File image = new File("images/" + setting.getFileName() + ".png");
 		
 		try {
-			ImageIO.write(c.getImage().getBufferedImage().getSubimage(x, y, 1, 1), "png", image);
+			ImageIO.write(c.getImage().getBufferedImage().getSubimage(point.x, point.y, 1, 1), "png", image);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -113,7 +122,14 @@ public class SelectionPoint {
 	}
 	
 	public void save(ImageCanvas c, Setting setting) {
+		if (c.getImage() == null || point == null) {
+			return;
+		}
+		
 		saveLocation(setting);
 		saveImage(c, setting);
+	}
+	
+	public void reset() {
 	}
 }

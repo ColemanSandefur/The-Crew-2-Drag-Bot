@@ -21,6 +21,7 @@ public class Bot extends Thread {
 			
 			if (ImageDataManager.perfectBurn.isOnScreen(robot)) {
 				System.out.println("Perfect Burn");
+				RaceState.timeRound = System.currentTimeMillis();
 				RaceState.midRace = true;
 			} else {
 				return;

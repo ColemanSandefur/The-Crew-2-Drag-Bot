@@ -2,7 +2,6 @@ package setting_editor.image_canvas;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,16 +9,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import setting_editor.settings.Setting;
-import utils.CustomImage;
-
-class Point {
-	public int x, y;
-	
-	public Point(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-}
 
 class Box {
 	Point[] points = new Point[2];
@@ -68,6 +57,7 @@ class Box {
 	}
 }
 
+@SuppressWarnings("rawtypes")
 public class SelectionArea {
 	Box curBox = new Box();
 	Box oldBox = null;
@@ -89,7 +79,6 @@ public class SelectionArea {
 
 			@Override
 			public void onStop() {
-				// TODO Auto-generated method stub
 				repaint(canvas, _box);
 			}
 		};
@@ -194,6 +183,9 @@ public class SelectionArea {
 	}
 	
 	public void save(ImageCanvas c, Setting setting) {
+		if (c.getImage() == null || !curBox.hasAllPoints()) {
+			return;
+		}
 		saveLocation(setting);
 		saveImage(c, setting);
 	}

@@ -27,6 +27,7 @@ import setting_editor.settings.Setting;
 import utils.CustomImage;
 import javax.swing.JLabel;
 
+@SuppressWarnings({ "rawtypes", "serial" })
 public class EditorGUI extends JFrame {
 
 	private JPanel contentPane;
@@ -66,6 +67,8 @@ public class EditorGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
+	@SuppressWarnings("unchecked")
 	public EditorGUI() {
 		setTitle("Bot Settings");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

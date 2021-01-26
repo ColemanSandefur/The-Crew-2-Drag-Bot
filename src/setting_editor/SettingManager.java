@@ -4,13 +4,14 @@ import setting_editor.settings.AreaCallback;
 import setting_editor.settings.PixelCallback;
 import setting_editor.settings.Setting;
 
+@SuppressWarnings("rawtypes")
 public class SettingManager {
-	public static final Setting<AreaCallback> eRestart, restartRef, skipRef;
+	public static final Setting<AreaCallback> restartRef, skipRef;
 	public static final Setting<PixelCallback> burnLocation, perfectBurn, shiftLocation;
 	private static Setting selectedSetting = null;
 	
 	static {
-		eRestart = loadArea("E-Restart", "E-Restart");
+//		eRestart = loadArea("E-Restart", "E-Restart");
 		restartRef = loadArea("Restart Ref", "Restart_Ref");
 		skipRef = loadArea("Skip Ref", "Skip_Ref");
 		
@@ -27,10 +28,9 @@ public class SettingManager {
 		return new Setting<AreaCallback>(new AreaCallback(), name, fileName);
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static Setting[] getAllSettings() {
 		return new Setting[] {
-			eRestart, restartRef, skipRef,
+			restartRef, skipRef,
 			burnLocation, perfectBurn, shiftLocation
 		};
 	}

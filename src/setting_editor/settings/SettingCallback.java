@@ -4,6 +4,7 @@ import java.awt.Graphics;
 
 import setting_editor.image_canvas.ImageCanvas;
 
+@SuppressWarnings("rawtypes")
 public abstract class SettingCallback {
 	protected Setting settingRef;
 	

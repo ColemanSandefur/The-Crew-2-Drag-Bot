@@ -1,21 +1,18 @@
 package setting_editor.image_canvas;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
 import setting_editor.SettingManager;
-import utils.CustomImage;
-import javax.swing.JScrollPane;
 
+@SuppressWarnings("serial")
 public class PictureGUI extends JFrame {
-	private CustomImage image;
-	
 	private JPanel contentPane;
 	private ImageCanvas panel;
 	private JScrollPane scrollPane;
@@ -40,17 +37,11 @@ public class PictureGUI extends JFrame {
 			public void componentHidden(ComponentEvent e) {
 				System.out.println("hidden");
 				SettingManager.getSelectedSetting().getCallback().onWindowClosed();
-				scrollPane = new JScrollPane();
-				scrollPane.setViewportView(scrollPane);
+				panel.setImage(null);
 			}
 		});
 	}
 	
 	public ImageCanvas getImageCanvas() { return panel; }
 	public JScrollPane getScrollPane() { return scrollPane; }
-	
-	public void setImage(CustomImage image) {
-		this.image = image;
-		this.repaint();
-	}
 }

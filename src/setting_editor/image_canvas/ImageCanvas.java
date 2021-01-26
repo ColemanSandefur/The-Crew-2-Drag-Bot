@@ -16,6 +16,7 @@ import setting_editor.settings.Setting;
 import utils.CustomImage;
 import utils.Pixel;
 
+@SuppressWarnings({"serial", "rawtypes"})
 public class ImageCanvas extends JPanel {
 	private CustomImage image;
 	private Cursor cursor = new Cursor(-10, -10, 10, Color.BLACK);

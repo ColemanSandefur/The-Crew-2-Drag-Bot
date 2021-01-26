@@ -10,6 +10,7 @@ public class PixelCallback extends SettingCallback {
 	private void stop() {
 		selection.stop();
 	}
+	
 	@Override
 	public void onSelected() {
 		// TODO Auto-generated method stub

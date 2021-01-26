@@ -9,6 +9,7 @@ public class RaceState {
 	public static boolean midRace;
 	public static int roundNumber = 1;
 	public static int gamesPlayed = 0;
+	public static long timeRound;
 	
 	public static void resetRaceVars() {
 		resetRoundVars();
@@ -16,7 +17,7 @@ public class RaceState {
 	}
 	
 	public static boolean shouldResetRound(Robot robot) {
-		return roundNumber < 4 && ImageDataManager.eRestart.isOnScreen(robot);
+		return roundNumber < 4 && System.currentTimeMillis() - (timeRound + 4000) > 20;
 	}
 	
 	public static void resetRound(Robot robot) {

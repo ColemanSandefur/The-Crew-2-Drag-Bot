@@ -7,7 +7,7 @@ import setting_editor.settings.Setting;
 @SuppressWarnings("rawtypes")
 public class SettingManager {
 	public static final Setting<AreaCallback> restartRef, skipRef;
-	public static final Setting<PixelCallback> burnLocation, perfectBurn, shiftLocation;
+	public static final Setting<PixelCallback> burnLocation, perfectBurn, shiftLocation,startRef;
 	private static Setting selectedSetting = null;
 	
 	static {
@@ -18,6 +18,7 @@ public class SettingManager {
 		burnLocation = loadPixel("Burn Location", "Burn_Location");
 		perfectBurn = loadPixel("Perfect Burn", "Perfect_Burn");
 		shiftLocation = loadPixel("Shift Location", "Shift_Location");
+		startRef = loadPixel("Start Ref", "Start_Ref");
 	}
 	
 	private static Setting<PixelCallback> loadPixel(String name, String fileName) {
@@ -30,8 +31,8 @@ public class SettingManager {
 	
 	public static Setting[] getAllSettings() {
 		return new Setting[] {
-			restartRef, skipRef,
-			burnLocation, perfectBurn, shiftLocation
+			restartRef, skipRef, 
+			burnLocation, perfectBurn, shiftLocation, startRef
 		};
 	}
 	

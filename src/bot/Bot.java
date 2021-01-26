@@ -1,13 +1,16 @@
 package bot;
 
+import java.awt.AWTException;
 import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 import bot.imageDataTypes.ImageDataManager;
 import bot.stages.DragStage;
 import bot.stages.WarmupStage;
 
 public class Bot extends Thread {
-	boolean running;
+	static boolean running;
+	
 	Robot robot;
 	
 	private void runLoop() {
@@ -21,20 +24,40 @@ public class Bot extends Thread {
 			
 			if (ImageDataManager.perfectBurn.isOnScreen(robot)) {
 				System.out.println("Perfect Burn");
-				RaceState.timeRound = System.currentTimeMillis();
 				RaceState.midRace = true;
+				CarState.setAccelerating(false);
 			} else {
 				return;
 			}
 		}
 		
-		//Will trigger after the car hasn't finished for a while
+//		Will trigger after the car hasn't finished for a while
 		if (RaceState.shouldResetRound(robot)) {
 			RaceState.resetRound(robot);
 			return;
 		}
 		
-		DragStage.run(robot);
+		if (!RaceState.startedRace) {
+			if (ImageDataManager.startRef.isOnScreen(robot)) {
+				RaceState.startedRace = true;
+				CarState.setAccelerating(true);
+				RaceState.timeRound = System.currentTimeMillis();
+				
+				new KeyPress() {
+
+					@Override
+					public void PressKey(Robot robot) {
+						robot.delay(100);
+						robot.keyPress(KeyEvent.VK_SHIFT);
+						robot.delay(3000);
+						robot.keyRelease(KeyEvent.VK_SHIFT);
+					}
+					
+				}.start();
+			}
+		}
+		
+		DragStage.run(robot, RaceState.startedRace);
 	}
 	
 	public void run() {

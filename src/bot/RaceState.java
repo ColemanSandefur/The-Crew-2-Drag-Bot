@@ -7,6 +7,7 @@ import bot.imageDataTypes.ImageDataManager;
 
 public class RaceState {
 	public static boolean midRace;
+	public static boolean startedRace;
 	public static int roundNumber = 1;
 	public static int gamesPlayed = 0;
 	public static long timeRound;
@@ -17,7 +18,12 @@ public class RaceState {
 	}
 	
 	public static boolean shouldResetRound(Robot robot) {
-		return roundNumber < 4 && System.currentTimeMillis() - (timeRound + 4000) > 20;
+		
+		if (timeRound == 0) {
+			return false;
+		}
+		long time = System.currentTimeMillis() - (timeRound);
+		return roundNumber < 4 && time > 28*1000;
 	}
 	
 	public static void resetRound(Robot robot) {
@@ -25,9 +31,9 @@ public class RaceState {
 		robot.keyPress(KeyEvent.VK_B);
 		robot.delay(30);
 		robot.keyRelease(KeyEvent.VK_B);
-		robot.delay(30);
+		robot.delay(100);
 		robot.keyPress(KeyEvent.VK_ENTER);
-		robot.delay(500);
+		robot.delay(1000);
 		robot.keyRelease(KeyEvent.VK_ENTER);
 		
 		resetRoundVars();
@@ -35,6 +41,8 @@ public class RaceState {
 	
 	public static void resetRoundVars() {
 		midRace = false;
+		startedRace = false;
+		timeRound = 0;
 		
 		CarState.resetState();
 	}

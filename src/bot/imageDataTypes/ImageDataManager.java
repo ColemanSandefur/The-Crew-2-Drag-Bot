@@ -10,7 +10,7 @@ import utils.CustomImage;
 public class ImageDataManager {
 	// will hold all the references to ImageDataTypes
 	public static final ImageDataPoint burnLocation, perfectBurn, shiftLocation;
-	public static final ImageDataArea restartRef, skipRef;
+	public static final ImageDataArea restartRef, skipRef, startRef;
 	
 	static {
 		//ImageDataPoint
@@ -20,6 +20,7 @@ public class ImageDataManager {
 		
 		//ImageDataArea
 //		eRestart = loadImageDataArea("E-Restart");
+		startRef = loadImageDataArea("Start_Ref");
 		restartRef = loadImageDataArea("Restart_Ref");
 		skipRef = loadImageDataArea("Skip_Ref");
 	}

@@ -49,9 +49,9 @@ public class ImageCanvas extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Setting setting = SettingManager.getSelectedSetting();
-				
-				setting.getCallback().addPoint(e.getX(), e.getY(), thisPointer);
+//				Setting setting = SettingManager.getSelectedSetting();
+//				
+//				setting.getCallback().addPoint(e.getX(), e.getY(), thisPointer);
 			}
 
 			@Override

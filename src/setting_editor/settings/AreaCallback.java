@@ -3,8 +3,10 @@ package setting_editor.settings;
 import java.awt.Graphics;
 
 import setting_editor.image_canvas.ImageCanvas;
+import setting_editor.image_canvas.SelectionArea;
 
 public class AreaCallback extends SettingCallback {
+	SelectionArea selection = new SelectionArea();
 
 	@Override
 	public void onSelected() {
@@ -20,21 +22,23 @@ public class AreaCallback extends SettingCallback {
 
 	@Override
 	public void addPoint(int x, int y, ImageCanvas c) {
+		selection.addPoint(x, y, c);
 	}
 
 	@Override
 	public void paint(ImageCanvas c, Graphics g) {
 		// TODO Auto-generated method stub
-		
+		selection.paint(g);
 	}
 	
 	@Override
 	public void onWindowClosed() {
-		
+		selection.stop();
 	}
 
 	@Override
 	public void onSaved(ImageCanvas c) {
+		selection.save(c, settingRef);
 	}
 
 }

@@ -13,6 +13,8 @@ public class CustomImage {
 		this.image = image;
 	}
 	
+	public BufferedImage getBufferedImage() { return image; }
+	
 	public Pixel getPixel(int x, int y) {
 		return new Pixel(image.getRGB(x, y));
 	}

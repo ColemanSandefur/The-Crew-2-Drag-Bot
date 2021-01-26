@@ -1,5 +1,7 @@
 package utils;
 
+import java.awt.Color;
+
 public class Pixel {
 	public final int a, r, g, b;
 	private int rgb;
@@ -52,7 +54,15 @@ public class Pixel {
 		return rgb;
 	}
 	
+	public Color toColor() {
+		return new Color(r, g, b);
+	}
+	
 	public String toString() {
 		return "r: " + r + ", g: " + g + ", b: " + b;
+	}
+	
+	public Pixel invert() {
+		return new Pixel(255 - r, 255 - g, 255 - b);
 	}
 }

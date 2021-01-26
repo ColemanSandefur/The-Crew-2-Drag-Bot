@@ -2,6 +2,7 @@ package setting_editor.image_canvas;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import setting_editor.settings.Setting;
+import utils.CustomImage;
 
 class Point {
 	public int x, y;
@@ -46,19 +48,23 @@ class Box {
 		points[index] = new Point(x, y);
 	}
 	
-	public int getWidth() {
-		return Math.abs(points[1].x - points[0].x);
+	public int getWidth(int zoom) {
+		return round(Math.abs(points[1].x - points[0].x), zoom);
 	}
 	
-	public int getHeight() {
-		return Math.abs(points[1].y - points[0].y);
+	public int getHeight(int zoom) {
+		return round(Math.abs(points[1].y - points[0].y), zoom);
 	}
 	
-	public Point getTopLeftCorner() {
-		int x = Math.min(points[0].x, points[1].x);
-		int y = Math.min(points[0].y, points[1].y);
+	public Point getTopLeftCorner(int zoom) {
+		int x = round(Math.min(points[0].x, points[1].x), zoom);
+		int y = round(Math.min(points[0].y, points[1].y), zoom);
 		
 		return new Point(x, y);
+	}
+	
+	private int round(int num, int zoom) {
+		return num * zoom;
 	}
 }
 
@@ -84,17 +90,7 @@ public class SelectionArea {
 			@Override
 			public void onStop() {
 				// TODO Auto-generated method stub
-				_repaint(canvas);
-			}
-			
-			public void _repaint(ImageCanvas c) {
-				if (!_box.hasAllPoints()) {
-					return;
-				}
-				
-				int offset = 1;
-				
-				c.repaint(_box.getTopLeftCorner().x, _box.getTopLeftCorner().y, _box.getWidth() + offset, _box.getHeight() + offset);
+				repaint(canvas, _box);
 			}
 		};
 	}
@@ -125,21 +121,28 @@ public class SelectionArea {
 		Color c = (flashing.flashing? Color.BLACK : Color.WHITE); //flashes between black and white
 		Color c2 = flashing.flashing? Color.WHITE : Color.BLACK;
 		
+		int z = canvas.getZoom();
+		
 		g.setColor(c);
 		
-		g.drawRect(curBox.getTopLeftCorner().x, curBox.getTopLeftCorner().y, curBox.getWidth(), curBox.getHeight());
+		g.drawRect(curBox.getTopLeftCorner(z).x, curBox.getTopLeftCorner(z).y, curBox.getWidth(z), curBox.getHeight(z));
 		
 		g.setColor(c2);
 		
-		g.drawRect(curBox.getTopLeftCorner().x + 1, curBox.getTopLeftCorner().y + 1, curBox.getWidth() - 2, curBox.getHeight() - 2);
+		g.drawRect(curBox.getTopLeftCorner(z).x + 1, curBox.getTopLeftCorner(z).y + 1, curBox.getWidth(z) - 2, curBox.getHeight(z) - 2);
 	}
 	
-	public void repaint(ImageCanvas c) {
+	public void repaint(ImageCanvas c, Box curBox) {
 		if (!curBox.hasAllPoints() || c == null) {
 			return;
 		}
 		int offset = 1;
-		c.repaint(curBox.getTopLeftCorner().x, curBox.getTopLeftCorner().y, curBox.getWidth() + offset, curBox.getHeight() + offset);
+		int z = c.getZoom();
+		c.repaint(curBox.getTopLeftCorner(z).x, curBox.getTopLeftCorner(z).y, curBox.getWidth(z) + offset, curBox.getHeight(z) + offset);
+	}
+	
+	public void repaint(ImageCanvas c) {
+		repaint(c, curBox);
 	}
 	
 	public void stop() {
@@ -153,15 +156,15 @@ public class SelectionArea {
 			return;
 		}
 		
-		File location = new File("location_data/" + setting.getFileName() + "-generated.txt");
+		File location = new File("location_data/" + setting.getFileName() + ".txt");
 		
 		try {
 			FileWriter stream = new FileWriter(location);
-			
-			stream.write(curBox.getTopLeftCorner().x + " ");
-			stream.write(curBox.getTopLeftCorner().y + " ");
-			stream.write(curBox.getWidth() + " ");
-			stream.write(curBox.getHeight() + " ");
+			int z = canvas.getZoom();
+			stream.write(curBox.getTopLeftCorner(z).x / z + " ");
+			stream.write(curBox.getTopLeftCorner(z).y / z + " ");
+			stream.write(curBox.getWidth(z) / z + " ");
+			stream.write(curBox.getHeight(z) / z + " ");
 			
 			stream.close();
 		} catch (IOException e) {
@@ -175,10 +178,15 @@ public class SelectionArea {
 			return;
 		}
 		
-		File image = new File("images/" + setting.getFileName() + "-generated.png");
+		File image = new File("images/" + setting.getFileName() + ".png");
 		
 		try {
-			ImageIO.write(c.getImage().getBufferedImage().getSubimage(curBox.getTopLeftCorner().x, curBox.getTopLeftCorner().y, curBox.getWidth(), curBox.getHeight()), "png", image);
+			int z = canvas.getZoom();
+			ImageIO.write(
+				canvas.getImage().getBufferedImage().getSubimage(curBox.getTopLeftCorner(z).x / z, curBox.getTopLeftCorner(z).y / z, curBox.getWidth(z) / z, curBox.getHeight(z) / z), 
+				"png", 
+				image
+			);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

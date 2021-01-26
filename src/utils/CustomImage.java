@@ -8,20 +8,30 @@ import java.awt.image.BufferedImage;
 
 public class CustomImage {
 	BufferedImage image;
+	int width, height;
 	
 	public CustomImage(BufferedImage image) {
 		this.image = image;
+		width = image.getWidth();
+		height = image.getHeight();
 	}
 	
 	public BufferedImage getBufferedImage() { return image; }
 	
 	public Pixel getPixel(int x, int y) {
+		if (x > width || y > height) {
+			return null;
+		}
 		return new Pixel(image.getRGB(x, y));
 	}
 	
 	public static CustomImage toCustomImage(Image img) {
+		return new CustomImage(toBufferedImage(img));
+	}
+	
+	public static BufferedImage toBufferedImage(Image img) {
 		if (img instanceof BufferedImage) {
-			return new CustomImage((BufferedImage) img);
+			return ((BufferedImage) img);
 		}
 		
 		BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
@@ -30,7 +40,7 @@ public class CustomImage {
 		bGr.drawImage(img,  0,  0,  null);
 		bGr.dispose();
 		
-		return new CustomImage((BufferedImage) bimage);
+		return ((BufferedImage) bimage);
 	}
 	
 	public static CustomImage createScreenCapture(Robot robot, Rectangle rect) {

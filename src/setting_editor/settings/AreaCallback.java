@@ -22,7 +22,8 @@ public class AreaCallback extends SettingCallback {
 
 	@Override
 	public void addPoint(int x, int y, ImageCanvas c) {
-		selection.addPoint(x, y, c);
+		int z = c.getZoom();
+		selection.addPoint(x / z, y / z, c);
 	}
 
 	@Override

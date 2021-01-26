@@ -4,3 +4,4 @@ bin
 .project
 images/*
 location_data/*
+BotStatistics.txt

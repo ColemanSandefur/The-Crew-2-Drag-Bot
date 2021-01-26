@@ -64,6 +64,7 @@ public class Bot extends Thread {
 		// Start of bot
 		
 		try {
+			BotStatistics.botStart = System.currentTimeMillis();
 			robot = new Robot();
 			running = true;
 			CarState.initialize(robot);

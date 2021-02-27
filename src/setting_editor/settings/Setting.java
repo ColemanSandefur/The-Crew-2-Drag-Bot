@@ -1,5 +1,9 @@
 package setting_editor.settings;
 
+import java.io.File;
+import java.net.URISyntaxException;
+
+import setting_editor.EditorGUI;
 import setting_editor.image_canvas.ImageCanvas;
 
 public class Setting<T extends SettingCallback> {
@@ -34,5 +38,10 @@ public class Setting<T extends SettingCallback> {
 	
 	public void save(ImageCanvas canvas) {
 		
+	}
+	
+	public static String getDirectory() throws URISyntaxException {
+		return new File(EditorGUI.class.getProtectionDomain().getCodeSource().getLocation()
+			    .toURI()).getPath().replaceAll("\\\\", "/");
 	}
 }

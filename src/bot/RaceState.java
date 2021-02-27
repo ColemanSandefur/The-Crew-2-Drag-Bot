@@ -36,7 +36,7 @@ public class RaceState {
 		robot.delay(1000);
 		robot.keyRelease(KeyEvent.VK_ENTER);
 		
-		BotStatistics.timesReset++;
+		BotStatistics.increaseRacesReset(1);;
 		BotStatistics.save();
 		
 		resetRoundVars();
@@ -55,11 +55,13 @@ public class RaceState {
 	}
 	
 	public static void startNextGame(Robot robot) {
-		System.out.println("Game Finished!\n\n\tStarting New Game \n");
-		
-		BotStatistics.racesCompleted++;
-		BotStatistics.lastFinishedRace = System.currentTimeMillis();
+		BotStatistics.increaseRacesCompleted(1);
+		BotStatistics.setLastFinishedRace(System.currentTimeMillis());
 		BotStatistics.save();
+		
+		System.out.printf("Game #%d finished\n", BotStatistics.getRacesCompleted());
+		System.out.printf("Has been running for %.2f minutes\n", BotStatistics.toMinutes(System.currentTimeMillis() - BotStatistics.getBotStart()));
+		System.out.println("\n\tStarting New Game \n");
 		
 		robot.keyPress(KeyEvent.VK_N);
 		robot.delay(1000);

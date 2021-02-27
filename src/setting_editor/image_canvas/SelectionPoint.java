@@ -3,7 +3,6 @@ package setting_editor.image_canvas;
 import java.awt.Graphics;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
@@ -93,9 +92,20 @@ public class SelectionPoint {
 	}
 	
 	private void saveLocation(Setting setting) {
-		File location = new File("location_data/" + setting.getFileName() + ".txt");
 		
 		try {
+			String dir = Setting.getDirectory();
+			dir = dir.substring(0, dir.lastIndexOf("/")) + "/location_data/";
+			
+			File theDir = new File(dir);
+			if (!theDir.exists()) {
+				theDir.mkdirs();
+			}
+			
+			dir += setting.getFileName() + ".txt";
+			
+			File location = new File(dir);
+			
 			FileWriter stream = new FileWriter(location);
 			
 			stream.write(point.x + " ");
@@ -104,20 +114,29 @@ public class SelectionPoint {
 			stream.write(1 + " ");
 			
 			stream.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	private void saveImage(ImageCanvas c, Setting setting) {
-		File image = new File("images/" + setting.getFileName() + ".png");
-		
 		try {
+			
+			String dir = Setting.getDirectory();
+			dir = dir.substring(0, dir.lastIndexOf("/")) + "/images/";
+			
+			File theDir = new File(dir);
+			if (!theDir.exists()) {
+				theDir.mkdirs();
+			}
+			
+			dir += setting.getFileName() + ".png";
+			
+			File image = new File(dir);
 			ImageIO.write(c.getImage().getBufferedImage().getSubimage(point.x, point.y, 1, 1), "png", image);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
 	}
 	

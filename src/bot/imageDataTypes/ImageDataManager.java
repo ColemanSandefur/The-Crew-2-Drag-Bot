@@ -2,9 +2,11 @@ package bot.imageDataTypes;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javax.imageio.ImageIO;
 
+import bot.Bot;
 import utils.CustomImage;
 
 public class ImageDataManager {
@@ -56,11 +58,30 @@ public class ImageDataManager {
 		return new CustomImage(ImageIO.read(new File(path)));
 	}
 	
+	public static String getDirectory() throws URISyntaxException {
+		return new File(Bot.class.getProtectionDomain().getCodeSource().getLocation()
+			    .toURI()).getPath().replaceAll("\\\\", "/");
+	}
+	
 	private static String getImagePath(String str) {
+		try {
+			String dir = getDirectory();
+			dir = dir.substring(0, dir.lastIndexOf("/"));
+			return dir + "/images/" + str + ".png";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return "images/" + str + ".png";
 	}
 	
 	private static String getLocationPath(String str) {
+		try {
+			String dir = getDirectory();
+			dir = dir.substring(0, dir.lastIndexOf("/"));
+			return dir + "/location_data/" + str + ".txt";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return "location_data/" + str + ".txt";
 	}
 }

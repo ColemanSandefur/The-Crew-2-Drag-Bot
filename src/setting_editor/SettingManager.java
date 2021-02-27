@@ -11,7 +11,6 @@ public class SettingManager {
 	private static Setting selectedSetting = null;
 	
 	static {
-//		eRestart = loadArea("E-Restart", "E-Restart");
 		restartRef = loadArea("Restart Ref", "Restart_Ref");
 		skipRef = loadArea("Skip Ref", "Skip_Ref");
 		

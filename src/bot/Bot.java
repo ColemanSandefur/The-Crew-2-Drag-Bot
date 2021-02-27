@@ -1,6 +1,5 @@
 package bot;
 
-import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
 
@@ -10,6 +9,7 @@ import bot.stages.WarmupStage;
 
 public class Bot extends Thread {
 	static boolean running;
+//	public static BotGUI botGUI;
 	
 	Robot robot;
 	
@@ -64,12 +64,15 @@ public class Bot extends Thread {
 		// Start of bot
 		
 		try {
-			BotStatistics.botStart = System.currentTimeMillis();
+			BotStatistics.setBotStart(System.currentTimeMillis());
 			robot = new Robot();
 			running = true;
 			CarState.initialize(robot);
 			
 			Bot.sleep(1000);
+			
+//			botGUI = new BotGUI();
+//			botGUI.setVisible(true);
 			
 			while (running) {
 				runLoop();

@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
@@ -145,9 +144,18 @@ public class SelectionArea {
 			return;
 		}
 		
-		File location = new File("location_data/" + setting.getFileName() + ".txt");
-		
 		try {
+			String dir = Setting.getDirectory();
+			dir = dir.substring(0, dir.lastIndexOf("/")) + "/location_data/";
+			
+			File theDir = new File(dir);
+			if (!theDir.exists()) {
+				theDir.mkdirs();
+			}
+			
+			dir += setting.getFileName() + ".txt";
+			
+			File location = new File(dir);
 			FileWriter stream = new FileWriter(location);
 			int z = canvas.getZoom();
 			stream.write(curBox.getTopLeftCorner(z).x / z + " ");
@@ -156,7 +164,7 @@ public class SelectionArea {
 			stream.write(curBox.getHeight(z) / z + " ");
 			
 			stream.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -167,16 +175,26 @@ public class SelectionArea {
 			return;
 		}
 		
-		File image = new File("images/" + setting.getFileName() + ".png");
-		
 		try {
+			String dir = Setting.getDirectory();
+			dir = dir.substring(0, dir.lastIndexOf("/")) + "/images/";
+			
+			File theDir = new File(dir);
+			if (!theDir.exists()) {
+				theDir.mkdirs();
+			}
+			
+			dir += setting.getFileName() + ".png";
+			
+			File image = new File(dir);
+			
 			int z = canvas.getZoom();
 			ImageIO.write(
 				canvas.getImage().getBufferedImage().getSubimage(curBox.getTopLeftCorner(z).x / z, curBox.getTopLeftCorner(z).y / z, curBox.getWidth(z) / z, curBox.getHeight(z) / z), 
 				"png", 
 				image
 			);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

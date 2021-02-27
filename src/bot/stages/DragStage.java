@@ -1,11 +1,9 @@
 package bot.stages;
 
 import java.awt.Robot;
-import java.awt.event.KeyEvent;
 
 import bot.CarState;
 import bot.RaceState;
-import bot.imageDataTypes.ImageDataManager;
 
 public class DragStage implements Stage {
 	// will be called each time during the bot's main loop
@@ -17,12 +15,5 @@ public class DragStage implements Stage {
 			robot.delay(500);
 		}
 		
-	}
-	
-	private static boolean shouldShift(Robot robot) {
-		if (ImageDataManager.shiftLocation.isOnScreen(robot)) {
-			return true;
-		}
-		return ImageDataManager.shiftLocation.isOnScreen(robot);
 	}
 }

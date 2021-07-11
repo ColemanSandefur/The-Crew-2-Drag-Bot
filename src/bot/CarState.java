@@ -52,20 +52,20 @@ public class CarState {
 				//don't trust gear number, it is usually off
 				gear++;
 				
-				if (CarState.getGear() == 5) {
-					new KeyPress() {
-
-						@Override
-						public void PressKey(Robot robot) {
-							System.out.println("Adjusting");
-							robot.delay(1500);
-							robot.keyPress(KeyEvent.VK_D);
-							robot.delay(100);
-							robot.keyRelease(KeyEvent.VK_D);
-						}
-						
-					}.start();
-				}
+//				if (CarState.getGear() == 5) {
+//					new KeyPress() {
+//
+//						@Override
+//						public void PressKey(Robot robot) {
+//							System.out.println("Adjusting");
+//							robot.delay(1500);
+//							robot.keyPress(KeyEvent.VK_D);
+//							robot.delay(100);
+//							robot.keyRelease(KeyEvent.VK_D);
+//						}
+//						
+//					}.start();
+//				}
 				
 //				new KeyPress() {
 //

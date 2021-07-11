@@ -43,17 +43,19 @@ public class Bot extends Thread {
 				CarState.setAccelerating(true);
 				RaceState.timeRound = System.currentTimeMillis();
 				
-				new KeyPress() {
-
-					@Override
-					public void PressKey(Robot robot) {
-						robot.delay(100);
-						robot.keyPress(KeyEvent.VK_SHIFT);
-						robot.delay(3000);
-						robot.keyRelease(KeyEvent.VK_SHIFT);
-					}
-					
-				}.start();
+				ShiftEvents.runGear(0);
+				
+//				new KeyPress() {
+//
+//					@Override
+//					public void PressKey(Robot robot) {
+//						robot.delay(100);
+//						robot.keyPress(KeyEvent.VK_SHIFT);
+//						robot.delay(3000);
+//						robot.keyRelease(KeyEvent.VK_SHIFT);
+//					}
+//					
+//				}.start();
 			}
 		}
 		

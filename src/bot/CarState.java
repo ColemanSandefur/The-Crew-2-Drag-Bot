@@ -12,8 +12,9 @@ abstract class CarShifting extends Thread {
 	@Override
 	public void run() {
 		try {
-			screenRobot = new Robot();
-			shiftRobot = new Robot();
+			screenRobot = new Robot(); // In charge of taking screenshots
+			shiftRobot = new Robot(); // In charge of shifting
+			
 			while (Bot.running) {
 				if (ImageDataManager.shiftLocation.isOnScreen(screenRobot)) {
 					shift();
@@ -24,14 +25,14 @@ abstract class CarShifting extends Thread {
 		}
 	}
 	
-	public void shift() {
+	public void shift() throws Exception {
 		shiftRobot.keyPress(KeyEvent.VK_E);
 		shiftRobot.delay(25);
 		shiftRobot.keyRelease(KeyEvent.VK_E);
 		didShift();
 	}
 	
-	public abstract void didShift();
+	public abstract void didShift() throws Exception;
 }
 
 public class CarState {
@@ -65,6 +66,21 @@ public class CarState {
 						
 					}.start();
 				}
+				
+//				new KeyPress() {
+//
+//					@Override
+//					public void PressKey(Robot robot) {
+//						System.out.println("Adjusting");
+//						robot.delay(1500);
+//						robot.keyPress(KeyEvent.VK_D);
+//						robot.delay(100);
+//						robot.keyRelease(KeyEvent.VK_D);
+//					}
+//					
+//				}.start();
+				
+				ShiftEvents.runGear(CarState.getGear());
 			}
 			
 		};

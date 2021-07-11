@@ -43,8 +43,8 @@ public class RaceState {
 	}
 	
 	public static void resetRoundVars() {
-		midRace = false;
-		startedRace = false;
+		midRace = false; // true when finished warming tires
+		startedRace = false; // true when car starts moving
 		timeRound = 0;
 		
 		CarState.resetState();

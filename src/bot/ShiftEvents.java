@@ -2,9 +2,8 @@ package bot;
 
 import java.awt.AWTException;
 import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,8 +14,8 @@ import bot.imageDataTypes.ImageDataManager;
 /*
  * Shift data will be arranged like this:
  * 
- *  #{number}      #{number}          #{character}
- * Gear Number | Delay after gear | Key to be pressed
+ *  #{number}      #{number}        #{number}     #{character}
+ * Gear Number | Delay after gear |  Duration | Key to be pressed
  * 
  * Each line is a new event
  */
@@ -24,21 +23,29 @@ import bot.imageDataTypes.ImageDataManager;
 class Event {
 	public int gearNumber;
 	public int delayMS;
+	public int durationMS;
 	public int character;
 	
 	public Event(Scanner data) {
 		this.gearNumber = data.nextInt();
 		this.delayMS = data.nextInt();
+		this.durationMS = data.nextInt();
 		
 		String character = data.nextLine();
-		KeyStroke ks = KeyStroke.getKeyStroke(character.charAt(0), 0);
-		this.character = ks.getKeyCode();
+		
+		if (character.equalsIgnoreCase("shift")) {
+			this.character = KeyEvent.VK_SHIFT;
+		} else {
+			KeyStroke ks = KeyStroke.getKeyStroke(character.charAt(0), 0);
+			this.character = ks.getKeyCode();
+		}
+		
 	}
 	
 	public void run(Robot robot) {
 		robot.delay(this.delayMS);
 		robot.keyPress(this.character);
-		robot.delay(100);
+		robot.delay(this.durationMS);
 		robot.keyRelease(this.character);
 	}
 }
@@ -71,14 +78,12 @@ public class ShiftEvents {
 	}
 	
 	static void runGear(int gear) {
-		for (ArrayList<Event> eventList : ShiftEvents.events) {
-			for (Event event : eventList) {
-				try {
-					event.run(new Robot());
-				} catch (AWTException e) {
-					System.out.println("Failed creating a robot for running an event");
-					e.printStackTrace();
-				}
+		for (Event event : ShiftEvents.events[gear]) {
+			try {
+				event.run(new Robot());
+			} catch (AWTException e) {
+				System.out.println("Failed creating a robot for running an event");
+				e.printStackTrace();
 			}
 		}
 	}

@@ -1,7 +1,6 @@
 package bot;
 
 import java.awt.Robot;
-import java.awt.event.KeyEvent;
 
 import bot.imageDataTypes.ImageDataManager;
 import bot.stages.DragStage;
@@ -43,7 +42,7 @@ public class Bot extends Thread {
 				CarState.setAccelerating(true);
 				RaceState.timeRound = System.currentTimeMillis();
 				
-				ShiftEvents.runGear(0);
+				ShiftEvents.runGear(1);
 				
 //				new KeyPress() {
 //

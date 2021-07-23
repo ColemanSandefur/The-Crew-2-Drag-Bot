@@ -7,8 +7,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import javax.swing.KeyStroke;
-
 import bot.imageDataTypes.ImageDataManager;
 
 /*
@@ -31,18 +29,19 @@ class Event {
 		this.delayMS = data.nextInt();
 		this.durationMS = data.nextInt();
 		
-		String character = data.nextLine();
+		String character = data.next();
 		
 		if (character.equalsIgnoreCase("shift")) {
 			this.character = KeyEvent.VK_SHIFT;
 		} else {
-			KeyStroke ks = KeyStroke.getKeyStroke(character.charAt(0), 0);
-			this.character = ks.getKeyCode();
+			this.character = java.awt.event.KeyEvent.getExtendedKeyCodeForChar(character.charAt(0));
 		}
 		
 	}
 	
 	public void run(Robot robot) {
+		// For debug
+		// System.out.printf("pushing %c for %d milliseconds with a %d millisecond delay after hitting %d gear\n", character, durationMS, delayMS, gearNumber);
 		robot.delay(this.delayMS);
 		robot.keyPress(this.character);
 		robot.delay(this.durationMS);
@@ -53,9 +52,14 @@ class Event {
 @SuppressWarnings("unchecked")
 public class ShiftEvents {
 	public static final ArrayList<Event>[] events;
+	public static final int NUM_GEARS = 10;
 	
 	static {
-		events = new ArrayList[10];
+		events = new ArrayList[NUM_GEARS];
+		
+		for (int i = 0; i < NUM_GEARS; i++) {
+			events[i] = new ArrayList<Event>();
+		}
 		
 		String dir;
 		try {
@@ -67,24 +71,30 @@ public class ShiftEvents {
 			
 			Scanner fileData = new Scanner(file);
 			
-			while (fileData.hasNextLine()) {
+			while (fileData.hasNext()) {
 				Event e = new Event(fileData);
 				events[e.gearNumber].add(e);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			System.out.println("Failed to load shift events");
 			e.printStackTrace();
 		}
 	}
 	
 	static void runGear(int gear) {
 		for (Event event : ShiftEvents.events[gear]) {
-			try {
-				event.run(new Robot());
-			} catch (AWTException e) {
-				System.out.println("Failed creating a robot for running an event");
-				e.printStackTrace();
-			}
+			new Thread() {
+				@Override
+				public void run() {
+					try {
+						event.run(new Robot());
+					} catch (AWTException e) {
+						System.out.println("Failed creating a robot for running an event for gear number " + gear);
+						e.printStackTrace();
+					}
+				}
+			}.start();
+			
 		}
 	}
 }

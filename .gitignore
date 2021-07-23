@@ -5,3 +5,4 @@ bin
 images/*
 location_data/*
 BotStatistics.txt
+shift_events.txt
